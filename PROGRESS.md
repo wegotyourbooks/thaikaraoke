@@ -8,42 +8,42 @@ Resume rule: continue at the first unchecked item. After data edits run
 - [x] PROGRESS.md
 
 ## 2. Scaffold
-- [ ] index.html (all screens as sections, nav tabs)
-- [ ] css/style.css (dark default, tone colors, mobile-first)
-- [ ] manifest.json (SVG data-URI icons, standalone)
-- [ ] sw.js (cache-first, all assets listed)
-- [ ] js/app.js router + boot
+- [x] index.html (all screens as sections, nav tabs)
+- [x] css/style.css (dark default, tone colors, mobile-first)
+- [x] manifest.json (SVG data-URI icons, standalone)
+- [x] sw.js (cache-first, all assets listed)
+- [x] js/app.js router + boot
 
 ## 3. FSRS engine
-- [ ] js/fsrs.js (v4.5 formulas, default params, retention 0.90, learning steps 1m/10m)
-- [ ] scripts/test-fsrs.mjs written
-- [ ] scripts/test-fsrs.mjs passes
+- [x] js/fsrs.js (v4.5 formulas, default params, retention 0.90, learning steps 1m/10m)
+- [x] scripts/test-fsrs.mjs written
+- [x] scripts/test-fsrs.mjs passes
 
 ## 4. Dataset
-- [ ] data/words-01.js (survival 1-100)
-- [ ] data/words-02.js (survival 101-150 + core 151-200)
-- [ ] data/words-03.js
-- [ ] data/words-04.js
-- [ ] data/words-05.js
-- [ ] data/words-06.js
-- [ ] data/words-07.js
-- [ ] data/words-08.js
-- [ ] data/words-09.js
-- [ ] data/words-10.js
-- [ ] data/words-11.js
-- [ ] data/words-12.js
-- [ ] data/phrases-01.js
-- [ ] data/phrases-02.js
-- [ ] data/phrases-03.js
-- [ ] data/phrases-04.js
-- [ ] data/phrases-05.js
-- [ ] data/phrases-06.js
-- [ ] data/phrases-07.js
-- [ ] data/phrases-08.js
-- [ ] data/minimal-pairs.js (60 sets)
-- [ ] scripts/link-data.mjs (auto wordIds + exampleIds from word-spaced thai)
-- [ ] scripts/validate-data.mjs written
-- [ ] validate-data.mjs passes clean (1200/400/60, ids unique, refs resolve, every word covered, tone/diacritic consistency)
+- [x] data/words-01.js (survival 1-100)
+- [x] data/words-02.js (survival 101-150 + core 151-200)
+- [x] data/words-03.js
+- [x] data/words-04.js
+- [x] data/words-05.js
+- [x] data/words-06.js
+- [x] data/words-07.js
+- [x] data/words-08.js
+- [x] data/words-09.js
+- [x] data/words-10.js
+- [x] data/words-11.js
+- [x] data/words-12.js
+- [x] data/phrases-01.js
+- [x] data/phrases-02.js
+- [x] data/phrases-03.js
+- [x] data/phrases-04.js
+- [x] data/phrases-05.js
+- [x] data/phrases-06.js
+- [x] data/phrases-07.js
+- [x] data/phrases-08.js
+- [x] data/minimal-pairs.js (60 sets)
+- [x] scripts/link-data.mjs (auto wordIds + exampleIds from word-spaced thai)
+- [x] scripts/validate-data.mjs written
+- [x] validate-data.mjs passes clean (1200/400/60, ids unique, refs resolve, every word covered, tone/diacritic consistency)
 
 ## 5. State manager
 - [ ] js/state.js: load/save (autosave), schemaVersion, export JSON, import JSON, reset
