@@ -43,6 +43,12 @@ export function contourSVG(tone, size = 24) {
     `stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
 
+// Remove Paiboon tone diacritics (grave/acute/circumflex/caron) so the mark
+// can't give away the answer in Tone ID drills. Vowel length (doubling) stays.
+export function stripToneMarks(karaoke) {
+  return karaoke.normalize('NFD').replace(/[̀́̂̌]/g, '').normalize('NFC');
+}
+
 // Karaoke rendered with each syllable colored by its tone.
 export function coloredKaraoke(karaoke, toneArr) {
   const syls = karaoke.split('-');

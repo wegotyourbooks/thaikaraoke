@@ -2,7 +2,7 @@
 // category is 'self' (learner self-grades) or 'objective' (auto-graded).
 // It calls ctx.onReveal() (self) or ctx.onObjective(correct) (objective).
 import { el, shuffle, sample, audioButton, wordKaraokeHTML, phraseKaraokeHTML } from './ui.js';
-import { TONES, TONE_INFO, contourSVG, toneOfSyllable, tonesOfKaraoke } from './tones.js';
+import { TONES, TONE_INFO, contourSVG, toneOfSyllable, tonesOfKaraoke, stripToneMarks } from './tones.js';
 import { words, phrases, wordById, phraseById, wordsInPhrase } from './data.js';
 
 export const ALL_MODES = ['recall', 'production', 'audio', 'cloze', 'builder', 'toneid', 'minimalpair'];
@@ -188,8 +188,9 @@ function renderToneId(item, ctx) {
   const node = el('div', {}, [
     el('div', { class: 'mode-tag', text: 'Tone ID · which tone?' }),
     el('div', { class: 'quiz-prompt' }, [
-      el('div', { class: 'karaoke-big', html: wordKaraokeHTML(w) }),
-      syls.length > 1 ? el('p', { class: 'dim', html: `syllable: <b>${syls[k]}</b>` }) : null,
+      // Neutral color + tone marks stripped so only the audio reveals the tone.
+      el('div', { class: 'karaoke-big', text: stripToneMarks(syls[k]) }),
+      syls.length > 1 ? el('p', { class: 'dim small', text: `from ${stripToneMarks(w.karaoke)}` }) : null,
       el('div', { class: 'row', style: 'justify-content:center', }, [audioButton(w.thai, { autoplay: true })]),
     ]),
     btns,

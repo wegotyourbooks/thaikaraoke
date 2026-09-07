@@ -1,6 +1,6 @@
 // Tone Gym: unlimited minimal-pair + tone-ID drills, hardest tones first.
 import { el, clear, audioButton, shuffle } from '../ui.js';
-import { TONES, TONE_INFO, contourSVG } from '../tones.js';
+import { TONES, TONE_INFO, contourSVG, stripToneMarks } from '../tones.js';
 import { minimalPairs, words } from '../data.js';
 import * as S from '../state.js';
 import { speak } from '../audio.js';
@@ -88,8 +88,9 @@ function renderToneId(area) {
   const btns = el('div', { class: 'tone-btns' });
   area.append(
     el('div', { class: 'quiz-prompt' }, [
-      el('div', { class: 'karaoke-big', html: `<b class="tone-${answer}">${syls[k]}</b>` }),
-      syls.length > 1 ? el('p', { class: 'dim small', text: `from ${w.karaoke}` }) : null,
+      // Neutral color + tone marks stripped so only the audio reveals the tone.
+      el('div', { class: 'karaoke-big', text: stripToneMarks(syls[k]) }),
+      syls.length > 1 ? el('p', { class: 'dim small', text: `from ${stripToneMarks(w.karaoke)}` }) : null,
       audioButton(w.thai, { autoplay: true }),
       el('p', { class: 'dim small', text: 'What tone is this?' }),
     ]),
