@@ -46,49 +46,55 @@ Resume rule: continue at the first unchecked item. After data edits run
 - [x] validate-data.mjs passes clean (1200/400/60, ids unique, refs resolve, every word covered, tone/diacritic consistency)
 
 ## 5. State manager
-- [ ] js/state.js: load/save (autosave), schemaVersion, export JSON, import JSON, reset
-- [ ] mid-session resume state persisted
+- [x] js/state.js: load/save (autosave), schemaVersion, export JSON, import JSON, reset
+- [x] mid-session resume state persisted
 
 ## 6. Session engine + quiz modes
-- [ ] js/session.js queue building (due reviews FSRS-order, then new in curriculum order; limits from settings)
-- [ ] new-word introduction screen
-- [ ] mode: recall (karaoke -> EN, self-grade)
-- [ ] mode: production (EN -> karaoke, self-grade, weighted highest)
-- [ ] mode: audio (TTS -> 4-choice meaning)
-- [ ] mode: cloze (blanked word, tile choices)
-- [ ] mode: sentence builder (arrange tiles)
-- [ ] mode: tone ID (5 tone buttons w/ contour icons)
-- [ ] mode: minimal pairs (hear one, pick which)
-- [ ] no same mode twice in a row per card; wrong answers requeue +10
-- [ ] feedback panel after every answer (answer, audio replay, tone)
-- [ ] session end screen (done, accuracy, streak, coverage, 3 weakest)
+- [x] js/session.js queue building (due reviews FSRS-order, then new in curriculum order; limits from settings)
+- [x] new-word introduction screen
+- [x] mode: recall (karaoke -> EN, self-grade)
+- [x] mode: production (EN -> karaoke, self-grade, weighted highest)
+- [x] mode: audio (TTS -> 4-choice meaning)
+- [x] mode: cloze (blanked word, tile choices)
+- [x] mode: sentence builder (arrange tiles)
+- [x] mode: tone ID (5 tone buttons w/ contour icons)
+- [x] mode: minimal pairs (hear one, pick which)
+- [x] no same mode twice in a row per card; wrong answers requeue +10
+- [x] feedback panel after every answer (answer, audio replay, tone)
+- [x] session end screen (done, accuracy, streak, coverage, 3 weakest)
 
 ## 7. Tone Gym
-- [ ] unlimited drills, hardest tones first, per-tone accuracy 5 bars
+- [x] unlimited drills, hardest tones first, per-tone accuracy 5 bars
 
 ## 8. Screens
-- [ ] Home (streak, coverage big, due count, start button, quick stats)
-- [ ] Browse (search, tag/status filters, detail + audio)
-- [ ] Stats (coverage over time, per-tone accuracy, heatmap, review forecast)
-- [ ] Settings (new/day, reviews/day, rate, script toggle, politeness, export/import/reset)
+- [x] Home (streak, coverage big, due count, start button, quick stats)
+- [x] Browse (search, tag/status filters, detail + audio)
+- [x] Stats (coverage over time, per-tone accuracy, heatmap, review forecast)
+- [x] Settings (new/day, reviews/day, rate, script toggle, politeness, export/import/reset)
 
 ## 9. Audio layer
-- [ ] js/audio.js th-TH voice detect, rate 0.5-1x, tap-to-hear everywhere
-- [ ] no-Thai-voice one-time banner w/ iOS instructions
+- [x] js/audio.js th-TH voice detect, rate 0.5-1x, tap-to-hear everywhere
+- [x] no-Thai-voice one-time banner w/ iOS instructions
 
 ## 10. PWA polish
-- [ ] manifest valid, icons render
-- [ ] offline works after first load (verified)
-- [ ] installable
+- [x] manifest valid, icons render
+- [x] offline works after first load (verified)
+- [x] installable
 
 ## 11. Final QA (acceptance checklist)
-- [ ] python3 -m http.server: app loads, session runs end to end
-- [ ] close mid-session, reopen -> resumes at same card
-- [ ] answer 5 cards, hard refresh -> state persisted
-- [ ] export JSON, reset, import -> restored
-- [ ] validate-data.mjs and test-fsrs.mjs both pass
-- [ ] every quiz mode reachable and functional
-- [ ] tone diacritics render on all karaoke
-- [ ] offline after first load
-- [ ] installable PWA
-- [ ] PROGRESS.md marked complete
+- [x] python3 -m http.server: app loads, session runs end to end
+- [x] close mid-session, reopen -> resumes at same card
+- [x] answer 5 cards, hard refresh -> state persisted
+- [x] export JSON, reset, import -> restored
+- [x] validate-data.mjs and test-fsrs.mjs both pass
+- [x] every quiz mode reachable and functional
+- [x] tone diacritics render on all karaoke
+- [x] offline after first load
+- [x] installable PWA
+- [x] PROGRESS.md marked complete
+
+## Status: BUILD COMPLETE
+All steps done and verified in headless Chromium (full session flow, mid-session
+resume, hard-refresh persistence, export/reset/import, offline reload, every
+quiz mode, tone diacritics rendering, valid manifest, zero console errors).
+Node checks: test-fsrs.mjs and validate-data.mjs both pass.
