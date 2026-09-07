@@ -22,6 +22,11 @@ export function el(tag, attrs = {}, children = []) {
 
 export function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); return node; }
 
+// Subtle phone vibration on answer. Best-effort: no-op where unsupported (iOS Safari).
+export function haptic(ok = true) {
+  try { if (navigator.vibrate) navigator.vibrate(ok ? 12 : [0, 28, 38, 28]); } catch (e) {}
+}
+
 let toastTimer = null;
 export function toast(msg, ms = 1800) {
   const t = document.getElementById('toast');

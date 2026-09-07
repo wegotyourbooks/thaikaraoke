@@ -63,6 +63,7 @@ p { margin: .4em 0; }
 }
 .tab-icon { font-size: 1.25rem; line-height: 1; }
 .tab.active { color: var(--accent); }
+#tabbar[hidden] { display: none; }
 
 /* ---- buttons ---- */
 button { font-family: inherit; }
@@ -115,6 +116,13 @@ button { font-family: inherit; }
 .contour { vertical-align: middle; }
 
 /* ---- home ---- */
+.ring-wrap { position: relative; width: 168px; height: 168px; margin: 6px auto 4px; }
+.ring-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring-track { fill: none; stroke: var(--bg3); }
+.ring-fill { fill: none; stroke: var(--accent); stroke-linecap: round; transition: stroke-dashoffset .5s ease; }
+.ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.ring-center .big { font-size: 2.1rem; font-weight: 800; line-height: 1; }
+.ring-center .sub { font-size: .72rem; color: var(--text-dim); margin-top: 4px; }
 .coverage-hero { text-align: center; padding: 22px 16px; }
 .coverage-num { font-size: 3.2rem; font-weight: 800; color: var(--accent); line-height: 1; }
 .coverage-cap { color: var(--text-dim); margin-top: 6px; }
@@ -186,7 +194,8 @@ button { font-family: inherit; }
 .tone-btn.correct { border-color: var(--good); }
 .tone-btn.wrong { border-color: var(--bad); }
 
-.feedback { border-radius: var(--radius); padding: 14px; margin: 14px 0; border: 1px solid; }
+.feedback { border-radius: var(--radius); padding: 14px; margin: 14px 0; border: 1px solid; animation: pop .18s ease; }
+@keyframes pop { from { transform: scale(.97); opacity: .55; } to { transform: scale(1); opacity: 1; } }
 .feedback.right { border-color: var(--good); background: rgba(46, 204, 143, .08); }
 .feedback.wrong { border-color: var(--bad); background: rgba(224, 93, 93, .08); }
 .feedback .verdict { font-weight: 700; margin-bottom: 6px; }

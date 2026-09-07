@@ -1,5 +1,5 @@
 // Daily session: build queue, run intro + quiz loop, grade via FSRS, resume.
-import { el, clear, audioButton, wordKaraokeHTML, phraseKaraokeHTML, toneLegend, toast } from './ui.js';
+import { el, clear, audioButton, wordKaraokeHTML, phraseKaraokeHTML, toneLegend, toast, haptic } from './ui.js';
 import { TONE_INFO, contourSVG } from './tones.js';
 import { newCard, review, previewIntervals, formatInterval, GRADE, STATE } from './fsrs.js';
 import * as S from './state.js';
@@ -192,6 +192,7 @@ function feedbackPanel(answer, correct, extra) {
 
 function showSelfGrade(container, item, rendered, footer) {
   clear(footer);
+  haptic(true); // light tick when the answer is revealed
   const a = rendered.answer;
   footer.append(feedbackPanel(a, true, el('p', { class: 'dim small', text: 'How well did you recall it?' })));
   const card = S.getCard(item.id) || newCard();
@@ -213,6 +214,7 @@ function showSelfGrade(container, item, rendered, footer) {
 
 function showObjectiveFeedback(container, item, rendered, footer, correct, tone) {
   clear(footer);
+  haptic(correct); // right = single tick, wrong = triple buzz
   footer.append(feedbackPanel(rendered.answer, correct));
   footer.append(el('button', { class: 'btn btn-primary btn-big', text: 'Continue', onclick: () =>
     applyGrade(container, item, correct ? GRADE.GOOD : GRADE.AGAIN, correct, tone || rendered.answer.tone) }));

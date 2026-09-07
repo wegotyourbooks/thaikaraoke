@@ -20,6 +20,8 @@ const screens = {
 function show(name) {
   for (const [k, node] of Object.entries(screens)) node.hidden = k !== name;
   document.querySelectorAll('#tabbar .tab').forEach((t) => t.classList.toggle('active', t.dataset.nav === name));
+  // Distraction-free: hide the tab bar during an active session (Exit button returns home).
+  document.getElementById('tabbar').hidden = name === 'session';
   window.scrollTo(0, 0);
 }
 
