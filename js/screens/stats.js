@@ -1,21 +1,32 @@
 import { el, clear } from '../ui.js';
 import * as S from '../state.js';
+import * as D from '../derive.js';
 import { TONES, TONE_INFO } from '../tones.js';
 import { coveragePct, learnedCount } from '../session.js';
 import { wordById } from '../data.js';
 
 export function render(container) {
   clear(container);
-  const st = S.stats();
+  const doc = S.getState();
+  const total = D.fmtHM(D.totalActiveMs(doc));
   container.append(
     el('h1', { text: 'Stats' }),
     el('div', { class: 'panel' }, [
+      el('h2', { text: 'Time studied' }),
+      el('div', { class: 'end-stats' }, [
+        statCell('Total', total.text),
+        statCell('This week', D.fmtHM(D.msThisWeek(doc)).text),
+        statCell('Streak', D.streakDays(doc) + '🔥'),
+        statCell('Sessions', String(doc.sessions.length)),
+      ]),
+    ]),
+    el('div', { class: 'panel' }, [
       el('h2', { text: 'Coverage over time' }),
-      coverageChart(st.coverageHistory, coveragePct()),
+      coverageChart(S.coverageSnapshots(), coveragePct()),
       el('p', { class: 'dim small', text: `${learnedCount()} words learned · ~${coveragePct().toFixed(1)}% spoken coverage` }),
     ]),
-    el('div', { class: 'panel' }, [el('h2', { text: 'Tone accuracy' }), toneBars(st.tone)]),
-    el('div', { class: 'panel' }, [el('h2', { text: 'Study heatmap' }), heatmap(st.history)]),
+    el('div', { class: 'panel' }, [el('h2', { text: 'Tone accuracy' }), toneBars(D.toneAccuracy(doc))]),
+    el('div', { class: 'panel' }, [el('h2', { text: 'Study heatmap' }), heatmap(D.answersPerDay(doc, 84))]),
     el('div', { class: 'panel' }, [el('h2', { text: 'Upcoming reviews' }), forecast()]),
   );
 }
@@ -39,32 +50,29 @@ function coverageChart(history, current) {
   return el('div', { html: svg });
 }
 
+function statCell(k, v) {
+  return el('div', { class: 'stat-cell' }, [el('div', { class: 'v', text: v }), el('div', { class: 'k', text: k })]);
+}
+
 function toneBars(tone) {
   return el('div', {}, TONES.map((t) => {
-    const s = tone[t] || { c: 0, t: 0 };
-    const pct = s.t ? Math.round((s.c / s.t) * 100) : 0;
+    const s = tone[t] || { count: 0, correct: 0 };
+    const pct = s.count ? Math.round((s.correct / s.count) * 100) : 0;
     return el('div', { class: 'bar-row' }, [
       el('span', { class: `bar-label tone-${t}`, text: TONE_INFO[t].label }),
       el('div', { class: 'bar-track' }, [el('div', { class: 'bar-fill', style: `width:${pct}%;background:${TONE_INFO[t].color}` })]),
-      el('span', { class: 'bar-val', text: s.t ? `${pct}%` : '—' }),
+      el('span', { class: 'bar-val', text: s.count ? `${pct}%` : '—' }),
     ]);
   }));
 }
 
-function heatmap(history) {
-  // last 12 weeks (84 days)
-  const days = 84;
-  const cells = [];
-  const today = new Date();
-  let max = 1;
-  for (const k in history) max = Math.max(max, history[k].done || 0);
-  for (let i = days - 1; i >= 0; i--) {
-    const d = new Date(today); d.setDate(d.getDate() - i);
-    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    const done = (history[key] && history[key].done) || 0;
+// last 12 weeks, one cell per day, derived from the review log
+function heatmap(perDay) {
+  const max = Math.max(1, ...perDay.map((d) => d.done));
+  const cells = perDay.map(({ day, done }) => {
     const alpha = done ? 0.25 + 0.75 * (done / max) : 0;
-    cells.push(el('div', { class: 'heat-cell', title: `${key}: ${done}`, style: done ? `background:rgba(255,159,67,${alpha.toFixed(2)})` : '' }));
-  }
+    return el('div', { class: 'heat-cell', title: `${day}: ${done}`, style: done ? `background:rgba(255,159,67,${alpha.toFixed(2)})` : '' });
+  });
   return el('div', { class: 'heatmap' }, cells);
 }
 

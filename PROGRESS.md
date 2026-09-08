@@ -98,3 +98,60 @@ All steps done and verified in headless Chromium (full session flow, mid-session
 resume, hard-refresh persistence, export/reset/import, offline reload, every
 quiz mode, tone diacritics rendering, valid manifest, zero console errors).
 Node checks: test-fsrs.mjs and validate-data.mjs both pass.
+
+---
+
+# v2 UPGRADE: cross-device sync, time tracking, sentence frames, micro-lessons
+
+## v2.1 Schema v2 + migration
+- [ ] js/state.js rewritten to schema v2 (append-only logs + keyed LWW)
+- [ ] js/migrate.js: pure migrateV1toV2, writes thaikaraoke-v1-backup first
+- [ ] Settings > Advanced "Restore v1 backup" button
+- [ ] all screens read derived stats (js/derive.js), never stored counters
+- [ ] js/rollup.js: reviews older than 180 days folded into reviewsDaily
+
+## v2.2 Gist sync
+- [ ] js/merge.js pure merge (LWW keyed + union logs, commutative, idempotent)
+- [ ] scripts/test-merge.mjs all cases pass
+- [ ] js/gist.js REST wrapper (create/get/patch, 401 -> TokenExpired)
+- [ ] js/sync.js 6-step algorithm, updated_at retry max 3, pendingPush offline queue
+- [ ] triggers: load, session end, manual, visibilitychange hidden (2s debounce); never mid-session
+- [ ] js/qr.js self-written QR encoder + pairing via #sync= fragment
+- [ ] Settings > Sync: status, last sync, Sync now, disconnect and wipe token
+- [ ] two-context Playwright sync test (fake gist) passes
+
+## v2.3 Active time tracking
+- [ ] js/timer.js: pause on hidden/blur/45s idle
+- [ ] session records with activeMs appended on end AND on exit
+- [ ] Tone Gym logs mode:"tonegym" sessions
+- [ ] stale activeSession closed safely on load
+
+## v2.4 Dashboard
+- [ ] Home: total hours primary, hours this week, streak, coverage
+- [ ] 30-day minutes bar chart
+- [ ] milestone ladder 10/25/50/100/200/500 h
+- [ ] numbers never rounded up
+
+## v2.5 Functional 150 + phrasebook
+- [ ] tier:"functional150" on exactly 150 phrases (data/phrases-09.js added as needed)
+- [ ] queue interleaves 2 phrases per 10 new words
+- [ ] Browse > Phrasebook view
+
+## v2.6 Sentence frames
+- [ ] data/pools.js typed word pools
+- [ ] data/frames.js 80 frames
+- [ ] js/frames.js engine: only fillers whose card state != "new"
+- [ ] modes frame_fill / frame_sub (2x weight) / frame_prod
+- [ ] results log mode:"frame", update frameProgress, no own FSRS cards
+
+## v2.7 Micro-lessons
+- [ ] data/microlessons.js 40 lessons
+- [ ] selection: weak tone <75% with >=20 samples, not shown in 14 days, else rotation
+- [ ] skip button + "Don't show these" setting
+- [ ] Lessons view; showings logged to microLessonsShown
+
+## v2.8 Validation and QA
+- [ ] scripts/validate-data.mjs extended (frames, pools, lessons, tier count)
+- [ ] sw.js cache bumped to v2 with all new assets
+- [ ] CLAUDE.md documents schema v2 + derive-never-store rule
+- [ ] full acceptance checklist re-run in headless Chromium

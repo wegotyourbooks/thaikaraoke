@@ -2,8 +2,9 @@
 const wordModules = await Promise.all(
   Array.from({ length: 12 }, (_, i) => import(`../data/words-${String(i + 1).padStart(2, '0')}.js`))
 );
+const PHRASE_FILES = 8; // bumped when a new phrases-NN.js file is added
 const phraseModules = await Promise.all(
-  Array.from({ length: 8 }, (_, i) => import(`../data/phrases-${String(i + 1).padStart(2, '0')}.js`))
+  Array.from({ length: PHRASE_FILES }, (_, i) => import(`../data/phrases-${String(i + 1).padStart(2, '0')}.js`))
 );
 const { minimalPairs } = await import('../data/minimal-pairs.js');
 
@@ -23,6 +24,11 @@ export const allTags = (() => {
   for (const w of words) for (const t of w.tags) s.add(t);
   return [...s].sort();
 })();
+
+// The functional-150: the phrases that carry a real conversation, in curriculum
+// order. These are the ones interleaved into the study queue.
+const FUNCTIONAL = phrases.filter((p) => p.tier === 'functional150');
+export function functional150() { return FUNCTIONAL; }
 
 export function phrasesForWord(word) {
   return (word.exampleIds || []).map((id) => phraseById.get(id)).filter(Boolean);

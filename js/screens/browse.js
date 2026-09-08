@@ -1,5 +1,5 @@
 import { el, clear, audioButton, wordKaraokeHTML, phraseKaraokeHTML, toneBadge } from '../ui.js';
-import { words, phrases, allTags, phrasesForWord, wordsInPhrase } from '../data.js';
+import { words, phrases, allTags, phrasesForWord, wordsInPhrase, functional150 } from '../data.js';
 import * as S from '../state.js';
 import { TONE_INFO } from '../tones.js';
 
@@ -10,7 +10,7 @@ export function render(container) {
   const search = el('input', { type: 'search', placeholder: 'Search Thai, karaoke or English…', value: filter.q,
     oninput: (e) => { filter.q = e.target.value.toLowerCase(); renderList(list); } });
 
-  const kindRow = el('div', { class: 'filter-row' }, ['words', 'phrases'].map((k) =>
+  const kindRow = el('div', { class: 'filter-row' }, ['words', 'phrases', 'phrasebook'].map((k) =>
     chip(k, filter.kind === k, () => { filter.kind = k; filter.tag = null; syncChips(); renderList(list); })));
 
   const statusRow = el('div', { class: 'filter-row' }, [
@@ -60,9 +60,12 @@ function matches(item, isWord) {
 function renderList(list) {
   clear(list);
   const isWord = filter.kind === 'words';
-  const src = isWord ? words : phrases;
-  const rows = src.filter((x) => matches(x, isWord)).slice(0, 300);
-  list.append(el('p', { class: 'dim small', text: `${rows.length} shown` }));
+  // "phrasebook" is the functional-150 tier: the phrases that carry a conversation.
+  const src = isWord ? words : filter.kind === 'phrasebook' ? functional150() : phrases;
+  const rows = src.filter((x) => matches(x, isWord)).slice(0, 400);
+  list.append(el('p', { class: 'dim small', text: filter.kind === 'phrasebook'
+    ? `${rows.length} of the functional 150`
+    : `${rows.length} shown` }));
   rows.forEach((item) => {
     const s = statusOf(item.id);
     list.append(el('button', { class: 'browse-item', onclick: () => showDetail(item, isWord) }, [
@@ -85,7 +88,7 @@ function showDetail(item, isWord) {
     el('div', { class: 'row between' }, [
       el('div', {}, [
         el('div', { class: 'karaoke-mid', html: isWord ? wordKaraokeHTML(item) : phraseKaraokeHTML(item.karaoke) }),
-        settings.showThai ? el('div', { class: 'thai-script', text: item.thai }) : null,
+        settings.showThaiScript ? el('div', { class: 'thai-script', text: item.thai }) : null,
         el('div', { class: 'en-big', style: 'font-size:1.1rem', text: item.en }),
         item.literal ? el('div', { class: 'dim small', text: 'literal: ' + item.literal }) : null,
       ]),

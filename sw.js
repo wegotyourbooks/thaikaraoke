@@ -1,6 +1,6 @@
 // ThaiKaraoke service worker: precache everything, cache-first.
 // Bump CACHE version on any asset change.
-const CACHE = 'thaikaraoke-v1';
+const CACHE = 'thaikaraoke-v2';
 
 const ASSETS = [
   './',
@@ -20,11 +20,25 @@ const ASSETS = [
   './js/tones.js',
   './js/coverage.js',
   './js/ui.js',
+  './js/merge.js',
+  './js/migrate.js',
+  './js/derive.js',
+  './js/rollup.js',
+  './js/timer.js',
+  './js/gist.js',
+  './js/sync.js',
+  './js/qr.js',
+  './js/frames.js',
+  './js/lessons.js',
   './js/screens/home.js',
   './js/screens/browse.js',
   './js/screens/stats.js',
   './js/screens/settings.js',
   './js/screens/tonegym.js',
+  './js/screens/lessons.js',
+  './data/microlessons.js',
+  './data/frames.js',
+  './data/pools.js',
   './data/minimal-pairs.js',
   ...Array.from({ length: 12 }, (_, i) => `./data/words-${String(i + 1).padStart(2, '0')}.js`),
   ...Array.from({ length: 8 }, (_, i) => `./data/phrases-${String(i + 1).padStart(2, '0')}.js`),

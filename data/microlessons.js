@@ -1,0 +1,252 @@
+// ThaiKaraoke data: 40 micro-lessons shown at the start of a session.
+// Each one is a single idea you can act on in the next 30 seconds of drilling.
+// `targetStat` lets a lesson be pulled forward when that statistic is weak.
+// `examples` are word/phrase ids from the lexicon; the validator checks them.
+export const LESSON_TOPICS = [
+  'tones', 'vowels', 'consonants', 'particles', 'pronouns',
+  'politeness', 'questions', 'negation', 'classifiers', 'time',
+  'structure', 'listening',
+];
+
+export const microLessons = [
+  {
+    id: 'ml01', topic: 'tones', seconds: 60,
+    title: 'The five tones are pitch shapes, not moods',
+    body: 'Mid is flat and relaxed. Low is flat but pressed down. Falling starts high and drops like you are ending a sentence hard. High starts mid and pushes up, slightly tight. Rising dips then climbs, like an English question. The shape is the word: change it and you have said something else.',
+    examples: ['w0033', 'w0023', 'w0005', 'w0038', 'w0010'],
+  },
+  {
+    id: 'ml02', topic: 'tones', seconds: 45, targetStat: 'tone:mid',
+    title: 'Mid tone: do nothing, on purpose',
+    body: 'Mid is your normal speaking pitch, held level. Most learners accidentally add an English stress contour and turn it into falling. Say it flat and slightly bored. If your voice moves at all, it is not mid.',
+    examples: ['w0012', 'w0033', 'w0034', 'w0084'],
+  },
+  {
+    id: 'ml03', topic: 'tones', seconds: 45, targetStat: 'tone:low',
+    title: 'Low tone: flat, but parked at the bottom',
+    body: 'Low is not a falling tone. It is level, just below your normal pitch, with a slightly creaky quality. Drop your voice before you start the syllable rather than dropping during it.',
+    examples: ['w0023', 'w0035', 'w0041', 'w0048'],
+  },
+  {
+    id: 'ml04', topic: 'tones', seconds: 45, targetStat: 'tone:falling',
+    title: 'Falling tone: start above your normal pitch',
+    body: 'The fall only reads as a fall if it starts high. Learners start at mid and land at low, which Thai ears often hear as low. Begin higher than feels natural, then let it drop all the way.',
+    examples: ['w0005', 'w0007', 'w0002', 'w0024'],
+  },
+  {
+    id: 'ml05', topic: 'tones', seconds: 45, targetStat: 'tone:high',
+    title: 'High tone: rising to a ceiling, not shouting',
+    body: 'High is produced with a tighter throat and a small upward push at the end. Volume does not make a tone. If you get loud instead of high, listeners hear an emphatic mid.',
+    examples: ['w0001', 'w0038', 'w0013', 'w0050'],
+  },
+  {
+    id: 'ml06', topic: 'tones', seconds: 45, targetStat: 'tone:rising',
+    title: 'Rising tone: dip first, then climb',
+    body: 'Rising is two moves, not one. Drop below your normal pitch, then sweep up. Skipping the dip makes it sound like a high tone. It takes longer than the other tones: give it the extra beat.',
+    examples: ['w0010', 'w0046', 'w0053', 'w0042'],
+  },
+  {
+    id: 'ml07', topic: 'tones', seconds: 60,
+    title: 'Rising and falling are the pair you will mix up',
+    body: 'They are the only two tones with real movement, so under pressure the brain grabs the wrong one. Anchor them to a gesture: falling is a chopping motion down, rising is a scoop up. Use the gesture out loud for a week and the confusion stops.',
+    examples: ['w0010', 'w0005'],
+  },
+  {
+    id: 'ml08', topic: 'tones', seconds: 40,
+    title: 'Tone lives on the vowel',
+    body: 'The tone mark in karaoke sits on the vowel because that is where the pitch happens. Consonants carry no tone. When you practise, hold the vowel long enough to actually perform the shape.',
+    examples: ['w0038', 'w0039'],
+  },
+  {
+    id: 'ml09', topic: 'tones', seconds: 50,
+    title: 'Tones survive fast speech',
+    body: 'Native speakers compress vowels but keep the pitch shapes. In connected speech a rising tone can become a short upward flick. Listen for direction of movement, not duration.',
+    examples: ['w0003', 'w0004'],
+  },
+  {
+    id: 'ml10', topic: 'vowels', seconds: 60,
+    title: 'Vowel length is meaning, not style',
+    body: 'Thai has short and long versions of the same vowel and they are different words. In karaoke the long one is doubled: aa, ii, uu, ee, oo. Hold a long vowel for roughly double the time. English speakers under-hold them constantly.',
+    examples: ['w0034', 'w0039'],
+  },
+  {
+    id: 'ml11', topic: 'vowels', seconds: 60,
+    title: 'The ʉ vowel has no English equivalent',
+    body: 'Say "ee" and keep your tongue exactly where it is, then unround and pull your lips flat and slightly back. It is a tense, compressed sound made at the front-centre of the mouth. Do not substitute "oo": that is a different vowel and a different word.',
+    examples: ['w0037'],
+  },
+  {
+    id: 'ml12', topic: 'vowels', seconds: 45,
+    title: 'ɛɛ is the vowel in "cat", stretched',
+    body: 'Karaoke ɛɛ is a wide, flat, open sound, not the "e" in "bed". Open your jaw more than feels polite. The narrow English "e" makes you sound like you are saying a different vowel entirely.',
+    examples: ['w0076'],
+  },
+  {
+    id: 'ml13', topic: 'vowels', seconds: 45,
+    title: 'ɔɔ is "aw", oo is "oh"',
+    body: 'ɔɔ is the open vowel in "law" with rounded lips. oo is the closed vowel in "go" without the English glide at the end. Thai vowels are pure: they do not slide into a second sound.',
+    examples: ['w0046', 'w0053'],
+  },
+  {
+    id: 'ml14', topic: 'vowels', seconds: 45,
+    title: 'əə is the sound in "her" without the r',
+    body: 'Say "burn" and cut the r off completely. Lips relaxed, tongue in the middle. Any hint of an English r is instantly foreign.',
+    examples: ['w0153', 'w0490'],
+  },
+  {
+    id: 'ml15', topic: 'consonants', seconds: 60,
+    title: 'bp and dt are single unaspirated sounds',
+    body: 'Karaoke bp and dt are not b-then-p. They are one consonant made with no puff of air, sitting between the English pairs. Hold a hand in front of your mouth: for bp and dt you should feel nothing.',
+    examples: ['w0033', 'w0032'],
+  },
+  {
+    id: 'ml16', topic: 'consonants', seconds: 50,
+    title: 'ng can start a word',
+    body: 'English only puts ng at the end (sing). Thai starts words with it. Practise by saying "singer", then stripping off the "si" and keeping what is left. It is easier when you stop treating it as a new sound.',
+    examples: ['w0063'],
+  },
+  {
+    id: 'ml17', topic: 'consonants', seconds: 50,
+    title: 'Final consonants are stopped, not released',
+    body: 'A word ending in p, t or k closes your mouth and stops there, with no audible release. English speakers add a small puff that Thai ears hear as an extra syllable. Cut the sound dead.',
+    examples: ['w0004', 'w0041'],
+  },
+  {
+    id: 'ml18', topic: 'consonants', seconds: 45,
+    title: 'r becomes l in casual speech',
+    body: 'In relaxed Bangkok speech the r sound is regularly pronounced as l, and sometimes dropped in clusters. Your textbook word may sound different in the street. Recognise both, and speak whichever you find easier.',
+    examples: ['w0214'],
+  },
+  {
+    id: 'ml19', topic: 'particles', seconds: 60,
+    title: 'The polite particle is a whole register',
+    body: 'Men end sentences with kráp, women with kâ for statements. It is not optional in shops, offices or with strangers. Dropping it with friends is normal; dropping it with a stranger sounds curt in a way no amount of smiling fixes.',
+    examples: ['w0001', 'w0002'],
+  },
+  {
+    id: 'ml20', topic: 'particles', seconds: 45,
+    title: 'ná softens whatever came before it',
+    body: 'Adding ná turns a command into a request and a statement into a shared understanding. It is the difference between "wait" and "wait, okay?". Use it constantly.',
+    examples: ['w0071'],
+  },
+  {
+    id: 'ml21', topic: 'particles', seconds: 40,
+    title: 'sì pushes; use it carefully',
+    body: 'sì urges someone to go ahead and do the thing. Warm between friends, pushy with a stranger. Pair it with ná or a polite particle to take the edge off.',
+    examples: ['w0072'],
+  },
+  {
+    id: 'ml22', topic: 'particles', seconds: 45,
+    title: 'Particles carry the tone of the sentence',
+    body: 'Thai does not lean on intonation for attitude the way English does, because pitch is already spoken for by tones. That work is done by particles at the end of the sentence. Learn them as vocabulary, not decoration.',
+    examples: ['w0071', 'w0049'],
+  },
+  {
+    id: 'ml23', topic: 'questions', seconds: 60,
+    title: 'mái asks; rʉ̌ʉ-bplàao checks',
+    body: 'mái at the end makes a neutral yes/no question. rʉ̌ʉ-bplàao ("or not") asks for a definite answer and is common when you actually need to know. Both go at the end, with no change to word order.',
+    examples: ['w0069'],
+  },
+  {
+    id: 'ml24', topic: 'questions', seconds: 50,
+    title: 'Question words stay where the answer goes',
+    body: 'Thai does not move the question word to the front. "You are going where" is the normal order. If you catch yourself reordering the sentence, you are still thinking in English.',
+    examples: ['w0016', 'w0021', 'w0022'],
+  },
+  {
+    id: 'ml25', topic: 'questions', seconds: 45,
+    title: 'châi mái is a tag question',
+    body: 'Ending with châi mái means "right?" and expects agreement. Use it to confirm what you think you heard. It is one of the fastest ways to keep a conversation moving while you are still slow.',
+    examples: ['w0006', 'w0069'],
+  },
+  {
+    id: 'ml26', topic: 'negation', seconds: 50,
+    title: 'mâi goes directly before the verb',
+    body: 'Negation is one word in one place: mâi immediately before the verb or adjective. There is no auxiliary, no conjugation, no "do not". Everything else in the sentence stays exactly the same.',
+    examples: ['w0005', 'w0036'],
+  },
+  {
+    id: 'ml27', topic: 'negation', seconds: 50,
+    title: 'yang mâi means "not yet"',
+    body: 'yang mâi implies the thing is still expected to happen, which is softer and more common than a flat no. It is the polite way to say you have not eaten, paid or finished.',
+    examples: ['w0154', 'w0005'],
+  },
+  {
+    id: 'ml28', topic: 'pronouns', seconds: 55,
+    title: 'Drop the pronoun whenever it is obvious',
+    body: 'Thai leaves out subjects and objects that context supplies. Saying "I" in every sentence is grammatical but marks you as a learner. Once the topic is set, just use the verb.',
+    examples: ['w0010', 'w0012'],
+  },
+  {
+    id: 'ml29', topic: 'pronouns', seconds: 60,
+    title: 'Kin terms replace "you"',
+    body: 'Thais address people by relative age: pîi for someone older, nɔ́ɔng for someone younger, and names for peers. Using kun for everyone is safe but distant. Getting this right does more for your Thai than another hundred words.',
+    examples: ['w0195', 'w0196', 'w0012'],
+  },
+  {
+    id: 'ml30', topic: 'politeness', seconds: 50,
+    title: 'kɔ̌ɔ plus a noun is the universal request',
+    body: 'kɔ̌ɔ + thing = "may I have". It works for water, the bill, a bag, one more minute. Add nɔ̀i and a polite particle and you have a complete, polite sentence with two words of vocabulary.',
+    examples: ['w0046', 'w0038', 'w0048'],
+  },
+  {
+    id: 'ml31', topic: 'politeness', seconds: 45,
+    title: 'nɔ̀i is the softener that makes requests land',
+    body: 'nɔ̀i literally means "a bit" and functions like "just" in English requests. Without it, a request reads as an instruction. With it, almost anything is acceptable.',
+    examples: ['w0048', 'w0150'],
+  },
+  {
+    id: 'ml32', topic: 'classifiers', seconds: 60,
+    title: 'Order is noun, number, classifier',
+    body: 'Two bottles of water is literally "water two bottle". The classifier goes last and is never plural. Getting the order right matters more than picking the perfect classifier.',
+    examples: ['w0038', 'w0363', 'w0053'],
+  },
+  {
+    id: 'ml33', topic: 'classifiers', seconds: 50,
+    title: 'Learn the classifier with the noun',
+    body: 'kon for people, dtua for animals and clothing, and a specific one for most common objects. Trying to memorise a classifier list separately does not stick. Store it as part of the word, the way you store gender in French.',
+    examples: ['w0084', 'w0170'],
+  },
+  {
+    id: 'ml34', topic: 'time', seconds: 55,
+    title: 'Time goes first, and verbs never change',
+    body: 'Thai verbs have no tense. Time is set once, usually at the front of the sentence, and everything after it is understood to happen then. Say "yesterday I go" and you have said it correctly.',
+    examples: ['w0151', 'w0050'],
+  },
+  {
+    id: 'ml35', topic: 'time', seconds: 50,
+    title: 'lɛ́ɛo marks a change of state',
+    body: 'lɛ́ɛo at the end means the situation has changed: already done, now full, now ready. It is not strictly past tense. "Full already" is how you decline more food.',
+    examples: ['w0050'],
+  },
+  {
+    id: 'ml36', topic: 'time', seconds: 50,
+    title: 'jà is future, gam-lang is right now',
+    body: 'jà before the verb means it has not happened yet. gam-lang before the verb means it is in progress. Both are optional when context is clear, and Thais leave them out more than textbooks suggest.',
+    examples: ['w0151', 'w0152'],
+  },
+  {
+    id: 'ml37', topic: 'structure', seconds: 55,
+    title: 'Verbs chain without connectors',
+    body: 'Thai strings verbs together directly: go eat rice, take come give. There is no "to" and no "and". If a sentence feels like it needs a joining word, it probably does not.',
+    examples: ['w0033', 'w0036', 'w0039'],
+  },
+  {
+    id: 'ml38', topic: 'structure', seconds: 45,
+    title: 'Adjectives are verbs',
+    body: 'There is no "is" before an adjective. Delicious, spicy and expensive are complete predicates on their own. Adding a verb for "to be" is one of the clearest learner errors.',
+    examples: ['w0040', 'w0041'],
+  },
+  {
+    id: 'ml39', topic: 'structure', seconds: 50,
+    title: 'hâi covers give, for, and let',
+    body: 'hâi marks the beneficiary of an action: do it for me, let me do it, give it to him. When you want to ask someone to do something on your behalf, hâi is the word that carries it.',
+    examples: ['w0156', 'w0150'],
+  },
+  {
+    id: 'ml40', topic: 'listening', seconds: 60,
+    title: 'Fast speech eats syllables, not tones',
+    body: 'At speed, unstressed syllables get swallowed and polite particles shrink to a breath. What survives is the tone shape and the vowel length of the stressed syllable. Train on those two and comprehension jumps well before your vocabulary does.',
+    examples: ['w0003', 'w0004'],
+  },
+];

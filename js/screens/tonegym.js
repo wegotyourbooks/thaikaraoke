@@ -3,11 +3,14 @@ import { el, clear, audioButton, shuffle } from '../ui.js';
 import { TONES, TONE_INFO, contourSVG, stripToneMarks } from '../tones.js';
 import { minimalPairs, words } from '../data.js';
 import * as S from '../state.js';
+import * as D from '../derive.js';
+import { createTimer } from '../timer.js';
 import { speak } from '../audio.js';
 
 let drill = 'minimalpair'; // 'minimalpair' | 'toneid'
 
 export function render(container) {
+  startGymTimer();
   clear(container);
   container.append(
     el('h1', { text: 'Tone Gym' }),
@@ -28,16 +31,42 @@ function tab(label, active, onclick) {
 
 // pick a tone weighted toward low accuracy / low sample count
 function weakestTone() {
-  const st = S.stats().tone;
+  const st = D.toneAccuracy(S.getState());
   let worst = TONES[0], worstScore = Infinity;
   for (const t of TONES) {
-    const s = st[t] || { c: 0, t: 0 };
-    const acc = s.t ? s.c / s.t : 0;
+    const s = st[t] || { count: 0, correct: 0 };
+    const acc = s.count ? s.correct / s.count : 0;
     // fewer attempts and lower accuracy => lower score => picked first
-    const score = acc * 100 + s.t;
+    const score = acc * 100 + s.count;
     if (score < worstScore) { worstScore = score; worst = t; }
   }
   return worst;
+}
+
+// Gym reps are logged as reviews with mode "tonegym" so tone accuracy and study
+// time include them, but they never touch FSRS scheduling.
+function logTone(tone, correct) {
+  S.appendReview({ cardId: 'tonegym', grade: correct ? 3 : 1, correct, mode: 'tonegym', tone, isNew: false });
+  if (timer) { gymCards += 1; if (correct) gymCorrect += 1; timer.setCounts({ cardsDone: gymCards, correct: gymCorrect }); }
+}
+
+// The gym runs its own timer; app.js closes it when the route leaves.
+let timer = null, gymCards = 0, gymCorrect = 0;
+
+export function startGymTimer() {
+  if (timer) return;
+  gymCards = 0; gymCorrect = 0;
+  timer = createTimer({ mode: 'tonegym' }).start();
+}
+
+export function stopGymTimer() {
+  if (!timer) return null;
+  const activeMs = timer.snapshot();
+  const startedAt = timer.startedAt;
+  timer.stop();
+  timer = null;
+  if (!activeMs && !gymCards) return null;
+  return S.appendSession({ startedAt, endedAt: Date.now(), activeMs, cardsDone: gymCards, correct: gymCorrect, mode: 'tonegym' });
 }
 
 function next() {
@@ -64,7 +93,7 @@ function renderMinimalPair(area) {
       if (choices.dataset.done) return;
       choices.dataset.done = '1';
       const correct = it.karaoke === target.karaoke;
-      S.recordToneAnswer(target.tone, correct);
+      logTone(target.tone, correct);
       [...choices.children].forEach((ch) => { ch.disabled = true; if (ch.innerHTML.includes(`>${target.karaoke}<`)) ch.classList.add('correct'); });
       if (!correct) b.classList.add('wrong');
       refreshBars();
@@ -101,7 +130,7 @@ function renderToneId(area) {
       if (btns.dataset.done) return;
       btns.dataset.done = '1';
       const correct = t === answer;
-      S.recordToneAnswer(answer, correct);
+      logTone(answer, correct);
       [...btns.children].forEach((ch) => ch.disabled = true);
       b.classList.add(correct ? 'correct' : 'wrong');
       if (!correct) { const right = [...btns.children].find((ch) => ch.textContent.trim() === TONE_INFO[answer].label); if (right) right.classList.add('correct'); }
@@ -121,14 +150,14 @@ function bars() {
 function refreshBars() { const w = document.getElementById('gym-bars'); if (w) drawBars(w); }
 function drawBars(wrap) {
   clear(wrap);
-  const st = S.stats().tone;
+  const st = D.toneAccuracy(S.getState());
   TONES.forEach((t) => {
-    const s = st[t] || { c: 0, t: 0 };
-    const pct = s.t ? Math.round((s.c / s.t) * 100) : 0;
+    const s = st[t] || { count: 0, correct: 0 };
+    const pct = s.count ? Math.round((s.correct / s.count) * 100) : 0;
     wrap.append(el('div', { class: 'bar-row' }, [
       el('span', { class: `bar-label tone-${t}`, text: TONE_INFO[t].label }),
       el('div', { class: 'bar-track' }, [el('div', { class: 'bar-fill', style: `width:${pct}%;background:${TONE_INFO[t].color}` })]),
-      el('span', { class: 'bar-val', text: s.t ? `${pct}%` : '—' }),
+      el('span', { class: 'bar-val', text: s.count ? `${pct}%` : '—' }),
     ]));
   });
 }
