@@ -2,7 +2,7 @@
 const wordModules = await Promise.all(
   Array.from({ length: 12 }, (_, i) => import(`../data/words-${String(i + 1).padStart(2, '0')}.js`))
 );
-const PHRASE_FILES = 8; // bumped when a new phrases-NN.js file is added
+const PHRASE_FILES = 9; // bumped when a new phrases-NN.js file is added
 const phraseModules = await Promise.all(
   Array.from({ length: PHRASE_FILES }, (_, i) => import(`../data/phrases-${String(i + 1).padStart(2, '0')}.js`))
 );

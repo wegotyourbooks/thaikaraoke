@@ -91,9 +91,13 @@ function boot() {
     banner.hidden = hasVoice || dismissed;
   });
 
-  // Service worker for offline use.
+  // Service worker for offline use. The data modules use top-level await, so
+  // this module can finish evaluating after "load" has already fired — waiting
+  // for that event would silently never register.
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+    const register = () => navigator.serviceWorker.register('./sw.js').catch(() => {});
+    if (document.readyState === 'complete') register();
+    else window.addEventListener('load', register, { once: true });
   }
 
   // A scanned pairing QR arrives as #sync=...; adopt it before the first route.

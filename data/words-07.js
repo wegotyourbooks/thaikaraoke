@@ -75,7 +75,7 @@ export const words = [
   { id:"w0672", rank:672, thai:"เปลี่ยนใจ", karaoke:"bplìan-jai", tone:["low","mid"], pos:"v", en:"to change one's mind", literal:"change-heart", tags:["core","feelings"], exampleIds:["p0295"] },
   { id:"w0673", rank:673, thai:"แนะนำ", karaoke:"nɛ́-nam", tone:["high","mid"], pos:"v", en:"to recommend, introduce", literal:null, tags:["core","smalltalk"], exampleIds:["p0296"] },
   { id:"w0674", rank:674, thai:"ความคิด", karaoke:"kwaam-kít", tone:["mid","high"], pos:"n", en:"idea, thought", literal:"ness-think", tags:["core"], exampleIds:["p0296"] },
-  { id:"w0675", rank:675, thai:"เห็นด้วย", karaoke:"hěn-dûai", tone:["rising","falling"], pos:"v", en:"to agree", literal:"see-also", tags:["core","smalltalk"], exampleIds:["p0296"] },
+  { id:"w0675", rank:675, thai:"เห็นด้วย", karaoke:"hěn-dûai", tone:["rising","falling"], pos:"v", en:"to agree", literal:"see-also", tags:["core","smalltalk"], exampleIds:["p0408","p0296"] },
   { id:"w0676", rank:676, thai:"ถูกใจ", karaoke:"tùuk-jai", tone:["low","mid"], pos:"v", en:"pleasing, to one's liking", literal:"touch-heart", tags:["feelings"], exampleIds:["p0261"] },
   { id:"w0677", rank:677, thai:"ประทับใจ", karaoke:"bprà-táp-jai", tone:["low","high","mid"], pos:"adj", en:"impressed", literal:"stamp-heart", tags:["feelings"], exampleIds:["p0261"] },
   { id:"w0678", rank:678, thai:"อวยพร", karaoke:"uai-pɔɔn", tone:["mid","mid"], pos:"v", en:"to wish someone well", literal:"give-blessing", tags:["smalltalk"], exampleIds:["p0276"] },

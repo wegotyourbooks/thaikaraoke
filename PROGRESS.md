@@ -133,16 +133,16 @@ Node checks: test-fsrs.mjs and validate-data.mjs both pass.
 - [x] numbers never rounded up
 
 ## v2.5 Functional 150 + phrasebook
-- [ ] tier:"functional150" on exactly 150 phrases (data/phrases-09.js added as needed)
-- [ ] queue interleaves 2 phrases per 10 new words
-- [ ] Browse > Phrasebook view
+- [x] tier:"functional150" on exactly 150 phrases (data/phrases-09.js added as needed)
+- [x] queue interleaves 2 phrases per 10 new words
+- [x] Browse > Phrasebook view
 
 ## v2.6 Sentence frames
-- [ ] data/pools.js typed word pools
-- [ ] data/frames.js 80 frames
-- [ ] js/frames.js engine: only fillers whose card state != "new"
-- [ ] modes frame_fill / frame_sub (2x weight) / frame_prod
-- [ ] results log mode:"frame", update frameProgress, no own FSRS cards
+- [x] data/pools.js typed word pools
+- [x] data/frames.js 80 frames
+- [x] js/frames.js engine: only fillers whose card state != "new"
+- [x] modes frame_fill / frame_sub (2x weight) / frame_prod
+- [x] results log mode:"frame", update frameProgress, no own FSRS cards
 
 ## v2.7 Micro-lessons
 - [x] data/microlessons.js 40 lessons
@@ -151,7 +151,38 @@ Node checks: test-fsrs.mjs and validate-data.mjs both pass.
 - [x] Lessons view; showings logged to microLessonsShown
 
 ## v2.8 Validation and QA
-- [ ] scripts/validate-data.mjs extended (frames, pools, lessons, tier count)
-- [ ] sw.js cache bumped to v2 with all new assets
-- [ ] CLAUDE.md documents schema v2 + derive-never-store rule
-- [ ] full acceptance checklist re-run in headless Chromium
+- [x] scripts/validate-data.mjs extended (frames, pools, lessons, tier count)
+- [x] sw.js cache bumped to v2 with all new assets
+- [x] CLAUDE.md documents schema v2 + derive-never-store rule
+- [x] full acceptance checklist re-run in headless Chromium
+
+## v2 Status: COMPLETE
+
+Node checks: `test-fsrs.mjs`, `test-merge.mjs` (36 assertions covering merge
+commutativity/idempotence, rollup, migration and derivations) and
+`validate-data.mjs` (1200 words, 420 phrases incl. exactly 150 functional150,
+60 minimal-pair sets, 80 frames, 11 pools, 40 micro-lessons) all pass.
+
+Browser checks in headless Chromium, zero console errors:
+- migration from a seeded v1 blob: every card and its FSRS fields intact,
+  backup written before anything is touched, restore works, re-migration clean
+- two contexts against a fake gist: disjoint offline work merges with nothing
+  lost, summed time, newer card edit wins while both reviews survive, rejected
+  write retried, offline queues a push, sync refused mid-session, 401 surfaces
+  as an expired token, disconnect wipes the token from storage
+- pairing link round-trips and the token is scrubbed from the address bar
+- QR encoder round-trips through an independent decoder at versions 1, 4, 9
+  and 10 (including the multi-block interleave and 16-bit length path)
+- timer: accrues while interacting, stops at the idle cutoff, adds nothing
+  while hidden, resumes on return, and a crashed session is closed at its last
+  activity rather than at the time of discovery
+- frames never surface a word whose card is still new; all three frame modes
+  render, grade the word's card, log mode "frame" and own no cards themselves
+- full session end to end, mid-session resume, hard-refresh persistence,
+  export/reset/import (import merges instead of clobbering), lesson rotation
+  and its off switch, weak-tone lesson targeting, phrasebook view, valid
+  manifest, service worker registered, app loads and renders offline
+
+Fixed along the way: the service worker never registered (it waited on a
+`load` event that had already fired, because the data modules use top-level
+await), and builder mode threw on completion so a session could hang there.

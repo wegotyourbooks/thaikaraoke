@@ -334,3 +334,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .frame-slot { color: var(--accent); font-weight: 700; }
 .frame-note { border-left: 3px solid var(--accent); padding-left: 10px; margin-top: 10px; }
 .frame-line { font-size: 1.25rem; line-height: 1.6; }
+
+/* builder: the assembled answer takes the verdict colour */
+.tile-answer-area.right { border-color: var(--good, #2ecc8f); }
+.tile-answer-area.wrong { border-color: var(--bad); }

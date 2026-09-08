@@ -8,7 +8,7 @@ import { dirname, join } from 'node:path';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const wordFiles = Array.from({ length: 12 }, (_, i) => `words-${String(i + 1).padStart(2, '0')}.js`);
-const phraseFiles = Array.from({ length: 8 }, (_, i) => `phrases-${String(i + 1).padStart(2, '0')}.js`);
+const phraseFiles = Array.from({ length: 9 }, (_, i) => `phrases-${String(i + 1).padStart(2, '0')}.js`);
 
 const words = [];
 for (const f of wordFiles) {

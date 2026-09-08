@@ -41,7 +41,7 @@ const ASSETS = [
   './data/pools.js',
   './data/minimal-pairs.js',
   ...Array.from({ length: 12 }, (_, i) => `./data/words-${String(i + 1).padStart(2, '0')}.js`),
-  ...Array.from({ length: 8 }, (_, i) => `./data/phrases-${String(i + 1).padStart(2, '0')}.js`),
+  ...Array.from({ length: 9 }, (_, i) => `./data/phrases-${String(i + 1).padStart(2, '0')}.js`),
 ];
 
 self.addEventListener('install', (e) => {

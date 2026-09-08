@@ -4,13 +4,19 @@
 import { el, shuffle, sample, audioButton, wordKaraokeHTML, phraseKaraokeHTML } from './ui.js';
 import { TONES, TONE_INFO, contourSVG, toneOfSyllable, tonesOfKaraoke, stripToneMarks } from './tones.js';
 import { words, phrases, wordById, phraseById, wordsInPhrase } from './data.js';
+import { drillFor, instantiate as frameInstantiate, distractors as frameDistractors, isFirstEncounter, markFrameSeen, gloss } from './frames.js';
 
-export const ALL_MODES = ['recall', 'production', 'audio', 'cloze', 'builder', 'toneid', 'minimalpair'];
+export const ALL_MODES = ['recall', 'production', 'audio', 'cloze', 'builder', 'toneid', 'minimalpair',
+  'frame_fill', 'frame_sub', 'frame_prod'];
 
 // Which modes apply to a given item, with production weighted highest.
+// Frame modes only appear for a word that actually fits a ready frame, and the
+// substitution drill is weighted double because it is where fluency comes from.
 export function modesFor(item) {
   if (item.type === 'phrase') return ['production', 'production', 'recall', 'audio', 'cloze', 'builder'];
-  return ['production', 'production', 'recall', 'audio', 'toneid', 'minimalpair'];
+  const base = ['production', 'production', 'recall', 'audio', 'toneid', 'minimalpair'];
+  if (drillFor(item.id)) base.push('frame_fill', 'frame_sub', 'frame_sub', 'frame_prod');
+  return base;
 }
 
 export function chooseMode(item, avoid) {
@@ -159,7 +165,7 @@ function renderBuilder(item, ctx) {
     if (placed.length === tokens.length && !pool.dataset.done) {
       pool.dataset.done = '1';
       const correct = placed.map((x) => x.text).join(' ') === p.karaoke;
-      answerArea.classList.add(correct ? '' : '');
+      answerArea.classList.add(correct ? 'right' : 'wrong');
       ctx.onObjective(correct);
     }
   }
@@ -241,6 +247,105 @@ function renderMinimalPair(item, ctx) {
   return { node, category: 'objective', answer: { thai: target.thai, karaoke: target.karaoke, en: target.en, tone: target.tone, isPhrase: false } };
 }
 
+// ---- FRAME MODES ----
+// A frame is shown with the target word's slot blanked or swapped. Grading
+// applies to the word's own card; the frame keeps only its own hit counters.
+function frameHeader(label, inst) {
+  return el('div', {}, [
+    el('div', { class: 'mode-tag', text: label }),
+    isFirstEncounter(inst.frame.id)
+      ? el('div', { class: 'frame-note' }, [el('p', { class: 'dim small', text: inst.frame.notes })])
+      : null,
+  ]);
+}
+
+function frameSentenceHTML(inst, blankSlot) {
+  const parts = inst.frame.karaoke.split(' ').map((tok) => {
+    if (!tok.startsWith('{')) return tok;
+    const slot = tok.slice(1, -1);
+    const w = wordById.get(inst.fills[slot]);
+    if (slot === blankSlot) return '<span class="frame-slot">____</span>';
+    return `<span class="frame-slot">${w.karaoke}</span>`;
+  });
+  return parts.join(' ');
+}
+
+// frame_fill: the slot is blank, pick the word that belongs there.
+function renderFrameFill(item, ctx) {
+  const inst = drillFor(item.id);
+  if (!inst) return renderRecall(item, ctx);
+  markFrameSeen(inst.frame.id);
+  const target = wordById.get(item.id);
+  const wrong = frameDistractors(inst.frame, inst.slot, item.id, 3).map((id) => wordById.get(id));
+  const options = shuffle([target, ...wrong]);
+  const choices = el('div', { class: 'choices' });
+  const node = el('div', {}, [
+    frameHeader('Frame · fill the gap', inst),
+    el('div', { class: 'quiz-prompt' }, [
+      el('div', { class: 'frame-line', html: frameSentenceHTML(inst, inst.slot) }),
+      el('div', { class: 'dim small', text: inst.en }),
+    ]),
+    choices,
+  ]);
+  options.forEach((w) => {
+    const b = el('button', { class: 'choice', html: `<b>${w.karaoke}</b> — ${w.en}`, onclick: () => {
+      if (choices.dataset.done) return;
+      choices.dataset.done = '1';
+      const correct = w.id === item.id;
+      [...choices.children].forEach((ch) => { ch.disabled = true; });
+      b.classList.add(correct ? 'correct' : 'wrong');
+      ctx.onObjective(correct, null, { frameId: inst.frame.id });
+    } });
+    choices.append(b);
+  });
+  return { node, category: 'objective', answer: answerOf(item), frameId: inst.frame.id };
+}
+
+// frame_sub: say the same sentence with this word swapped in. Self-graded.
+function renderFrameSub(item, ctx) {
+  const inst = drillFor(item.id);
+  if (!inst) return renderProduction(item, ctx);
+  markFrameSeen(inst.frame.id);
+  const other = frameDistractors(inst.frame, inst.slot, item.id, 1)[0];
+  // Same sentence, one word different: every other slot keeps its filler.
+  const prev = other ? frameInstantiate(inst.frame, { ...inst.fills, [inst.slot]: other }) : null;
+  const target = wordById.get(item.id);
+  const node = el('div', {}, [
+    frameHeader('Frame · substitution drill', inst),
+    prev ? el('div', { class: 'quiz-prompt' }, [
+      el('div', { class: 'frame-line', html: phraseKaraokeHTML(prev.karaoke) }),
+      el('div', { class: 'dim small', text: prev.en }),
+      audioButton(prev.th, { inline: true }),
+    ]) : null,
+    el('div', { class: 'quiz-prompt' }, [
+      el('div', { class: 'en-big', text: 'now with: ' + gloss(target) }),
+      el('p', { class: 'dim small center', text: 'Say the whole sentence again, swapping the word.' }),
+    ]),
+  ]);
+  return {
+    node, category: 'self', frameId: inst.frame.id,
+    answer: { thai: inst.th, karaoke: inst.karaoke, en: inst.en, tone: null, isPhrase: true, literal: null },
+  };
+}
+
+// frame_prod: English only, produce the whole Thai sentence. Self-graded.
+function renderFrameProd(item, ctx) {
+  const inst = drillFor(item.id);
+  if (!inst) return renderProduction(item, ctx);
+  markFrameSeen(inst.frame.id);
+  const node = el('div', {}, [
+    frameHeader('Frame · say the whole sentence', inst),
+    el('div', { class: 'quiz-prompt' }, [
+      el('div', { class: 'en-big', text: inst.en }),
+      el('p', { class: 'dim small center', text: 'Say it in Thai, then reveal to check.' }),
+    ]),
+  ]);
+  return {
+    node, category: 'self', frameId: inst.frame.id,
+    answer: { thai: inst.th, karaoke: inst.karaoke, en: inst.en, tone: null, isPhrase: true, literal: null },
+  };
+}
+
 const RENDERERS = {
   recall: renderRecall,
   production: renderProduction,
@@ -249,6 +354,9 @@ const RENDERERS = {
   builder: renderBuilder,
   toneid: renderToneId,
   minimalpair: renderMinimalPair,
+  frame_fill: renderFrameFill,
+  frame_sub: renderFrameSub,
+  frame_prod: renderFrameProd,
 };
 
 export function renderMode(mode, item, ctx) {

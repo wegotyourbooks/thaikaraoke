@@ -275,6 +275,7 @@ function renderQuiz(container, item) {
     onReveal: () => showSelfGrade(container, item, rendered, footer),
     onObjective: (correct, tone) => showObjectiveFeedback(container, item, rendered, footer, correct, tone),
   });
+  rendered.mode = mode;
   body.append(rendered.node);
 
   if (rendered.category === 'self') {
@@ -314,7 +315,7 @@ function showSelfGrade(container, item, rendered, footer) {
     { g: GRADE.EASY, label: 'Easy', cls: 'grade-easy' },
   ];
   const row = el('div', { class: 'grade-row' }, defs.map((d) =>
-    el('button', { class: `grade-btn ${d.cls}`, onclick: () => applyGrade(container, item, d.g, d.g >= GRADE.GOOD, a.tone) }, [
+    el('button', { class: `grade-btn ${d.cls}`, onclick: () => applyGrade(container, item, d.g, d.g >= GRADE.GOOD, a.tone, rendered) }, [
       el('span', { class: 'g', text: d.label }),
       el('span', { class: 'ivl', text: formatInterval(prev[d.g]) }),
     ])
@@ -327,10 +328,15 @@ function showObjectiveFeedback(container, item, rendered, footer, correct, tone)
   haptic(correct); // right = single tick, wrong = triple buzz
   footer.append(feedbackPanel(rendered.answer, correct));
   footer.append(el('button', { class: 'btn btn-primary btn-big', text: 'Continue', onclick: () =>
-    applyGrade(container, item, correct ? GRADE.GOOD : GRADE.AGAIN, correct, tone || rendered.answer.tone) }));
+    applyGrade(container, item, correct ? GRADE.GOOD : GRADE.AGAIN, correct, tone || rendered.answer.tone, rendered) }));
 }
 
-function applyGrade(container, item, grade, correct, tone, mode) {
+function applyGrade(container, item, grade, correct, tone, rendered) {
+  const frameId = rendered && rendered.frameId;
+  // Frames have no cards of their own: the word is graded, the frame just keeps
+  // its own hit counters so the engine knows what has been drilled.
+  const mode = frameId ? 'frame' : (rendered && rendered.mode);
+  if (frameId) S.bumpFrame(frameId, correct);
   const sess = S.getSession();
   const now = Date.now();
   const prior = S.getCard(item.id) || newCard(now);

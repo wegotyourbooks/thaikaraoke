@@ -67,7 +67,7 @@ export const words = [
   { id:"w0764", rank:764, thai:"ฉุกเฉิน", karaoke:"chùk-chə̌ən", tone:["low","rising"], pos:"adj", en:"emergency", literal:null, tags:["health","core"], exampleIds:["p0300"] },
   { id:"w0765", rank:765, thai:"ไฟไหม้", karaoke:"fai-mâi", tone:["mid","falling"], pos:"n", en:"fire (blaze)", literal:"fire-burn", tags:["core"], exampleIds:["p0300"] },
   { id:"w0766", rank:766, thai:"ขโมย", karaoke:"kà-mooi", tone:["low","mid"], pos:"v", en:"to steal; thief", literal:null, tags:["core"], exampleIds:["p0300"] },
-  { id:"w0767", rank:767, thai:"ตกลง", karaoke:"dtòk-long", tone:["low","mid"], pos:"v", en:"to agree, OK, deal", literal:"fall-down", tags:["core","smalltalk"], exampleIds:["p0298"] },
+  { id:"w0767", rank:767, thai:"ตกลง", karaoke:"dtòk-long", tone:["low","mid"], pos:"v", en:"to agree, OK, deal", literal:"fall-down", tags:["core","smalltalk"], exampleIds:["p0407","p0298"] },
   { id:"w0768", rank:768, thai:"สัญญา", karaoke:"sǎn-yaa", tone:["rising","mid"], pos:"n", en:"contract; to promise", literal:null, tags:["work","condo"], exampleIds:["p0324"] },
   { id:"w0769", rank:769, thai:"เช่า", karaoke:"châo", tone:"falling", pos:"v", en:"to rent", literal:null, tags:["condo","money"], exampleIds:["p0324"] },
   { id:"w0770", rank:770, thai:"ค่าเช่า", karaoke:"kâa-châo", tone:["falling","falling"], pos:"n", en:"rent (the fee)", literal:"cost-rent", tags:["condo","money"], exampleIds:["p0323"] },
