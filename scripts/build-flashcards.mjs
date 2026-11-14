@@ -142,11 +142,11 @@ const ruler = ([x, y0]) => {
   // Horizontal scale sits below the point and is read by the crosshair's
   // vertical arm; vertical scale sits to the right and is read by its
   // horizontal arm. Kept apart so their numbers never collide.
-  const H = y + 8, V = bx + 8;
-  let out = line(bx - 6.5, H, 13, 0) + line(V, y - 6.5, 0, 13);
+  const H = y + 13, V = bx + 13;
+  let out = line(bx - 10.5, H, 21, 0) + line(V, y - 10.5, 0, 21);
   out += `<div class="dot" style="left:${bx}mm;top:${y}mm"></div>`;
-  for (let mm = -6; mm <= 6; mm++) {
-    const major = mm % 3 === 0;
+  for (let mm = -10; mm <= 10; mm++) {
+    const major = mm % 5 === 0;
     out += line(bx + mm, H, 0, major ? 2 : 1.1);
     out += line(V, y + mm, major ? 2 : 1.1, 0);
     if (major) {
@@ -156,7 +156,7 @@ const ruler = ([x, y0]) => {
     }
   }
   out += `<div class="tl cap" style="left:${bx - 10}mm;top:${H + 5.6}mm">left / right</div>`;
-  out += `<div class="tl cap tr" style="left:${V + 6.8}mm;top:${y - 1}mm">up / down</div>`;
+  out += `<div class="tl cap tr" style="left:${V + 7.5}mm;top:${y - 1}mm">up / down</div>`;
   return out;
 };
 let scale = '';
@@ -167,8 +167,8 @@ const testHTML = `<!doctype html><html><head><meta charset="utf-8"><style>
 body { font-family: 'FreeSans', sans-serif; }
 .page { position: relative; width: 210mm; height: 297mm; overflow: hidden; page-break-after: always; }
 .xh { position: absolute; width: 0; height: 0; }
-.xh::before { content: ''; position: absolute; left: -13mm; top: 0; width: 26mm; border-top: 0.6pt solid #000; }
-.xh::after { content: ''; position: absolute; top: -13mm; left: 0; height: 26mm; border-left: 0.6pt solid #000; }
+.xh::before { content: ''; position: absolute; left: -26mm; top: 0; width: 52mm; border-top: 0.6pt solid #000; }
+.xh::after { content: ''; position: absolute; top: -26mm; left: 0; height: 52mm; border-left: 0.6pt solid #000; }
 .tk { position: absolute; border-left: 0.3pt solid #000; border-top: 0.3pt solid #000; }
 .tl { position: absolute; width: 5mm; text-align: center; font-size: 6pt; line-height: 1; }
 .tl.tr { width: auto; text-align: left; }
