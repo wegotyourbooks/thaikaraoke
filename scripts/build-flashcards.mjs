@@ -1,6 +1,8 @@
 // Printable flashcards: 500 most frequent words, karaoke front, English back.
-// A4, 5 x 10 grid of 38 x 27 mm cards (50 per page, 10 sheets), centred with
-// symmetric margins so the front and back grids share the same frame.
+// A4, 5 x 10 grid of 38 x 26 mm cards (50 per page, 10 sheets). The grid sits
+// 22 mm from the top and 15 mm from the bottom: the extra room above lets the
+// backs be shifted up a long way (to cancel a printer's duplex offset) without
+// pushing the top row of English off the page.
 // Pages alternate front, back, front, back. Backs are mirrored left-to-right so
 // a duplex printer set to "flip on long edge" lands each English behind its
 // karaoke.
@@ -20,9 +22,9 @@ const OUT_DIR = join(root, 'print');
 const COUNT = 500, COLS = 5, ROWS = 10, PER_PAGE = COLS * ROWS;
 // all geometry in millimetres
 const PAGE_W = 210, PAGE_H = 297;            // A4
-const CARD_W = 38, CARD_H = 27;
+const CARD_W = 38, CARD_H = 26;
 const MX = (PAGE_W - COLS * CARD_W) / 2;     // 10 mm
-const MY = (PAGE_H - ROWS * CARD_H) / 2;     // 13.5 mm
+const MY = 22;                               // top margin; bottom is 15 mm
 const arg = (name) => {
   const m = process.argv.find((a) => a.startsWith(`--${name}=`));
   const v = m ? parseFloat(m.split('=')[1]) : 0;
@@ -130,7 +132,7 @@ await page.pdf({ path: pdfPath, width: '210mm', height: '297mm', printBackground
 const POINTS = [
   // one grid intersection in from each corner, clear of the printer's dead zone
   [MX + CARD_W, MY + CARD_H], [PAGE_W - MX - CARD_W, MY + CARD_H], [PAGE_W / 2, PAGE_H / 2],
-  [MX + CARD_W, PAGE_H - MY - CARD_H], [PAGE_W - MX - CARD_W, PAGE_H - MY - CARD_H],
+  [MX + CARD_W, MY + (ROWS - 1) * CARD_H], [PAGE_W - MX - CARD_W, MY + (ROWS - 1) * CARD_H],
 ];
 const cross = ([x, y]) => `<div class="xh" style="left:${x}mm;top:${y}mm"></div>`;
 // The back carries the same shift as the card backs, so a reprint of this
