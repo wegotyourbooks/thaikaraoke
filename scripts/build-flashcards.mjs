@@ -60,6 +60,8 @@ function cardHTML(w, n, side, row, col) {
   return `<div class="card ${side}" style="left:${left}mm;top:${top}mm">${body}<div class="num">${num}</div></div>`;
 }
 
+const fmtOff = (v) => (v > 0 ? '+' : '') + v;
+const OFFSET_NOTE = BACK_DX || BACK_DY ? ` · backs shifted ${fmtOff(BACK_DX)} / ${fmtOff(BACK_DY)} mm` : '';
 const pages = [];
 for (let p = 0; p * PER_PAGE < picked.length; p++) {
   const chunk = picked.slice(p * PER_PAGE, (p + 1) * PER_PAGE);
@@ -75,7 +77,7 @@ for (let p = 0; p * PER_PAGE < picked.length; p++) {
   for (let c = 0; c <= COLS; c++) guides += `<div class="vl" style="left:${MX + c * CARD_W}mm"></div>`;
   for (let r = 0; r <= ROWS; r++) guides += `<div class="hl" style="top:${MY + r * CARD_H}mm"></div>`;
   pages.push(`<section class="page">${guides}${front}<div class="foot">Sheet ${p + 1} of 10 · FRONT (karaoke) · A4 · double-sided, flip on long edge, actual size (100%)</div></section>`);
-  pages.push(`<section class="page">${back}<div class="foot">Sheet ${p + 1} of 10 · BACK (English)</div></section>`);
+  pages.push(`<section class="page">${back}<div class="foot">Sheet ${p + 1} of 10 · BACK (English)${OFFSET_NOTE}</div></section>`);
 }
 
 const html = `<!doctype html><html><head><meta charset="utf-8"><style>
@@ -131,8 +133,11 @@ const POINTS = [
   [MX + CARD_W, PAGE_H - MY - CARD_H], [PAGE_W - MX - CARD_W, PAGE_H - MY - CARD_H],
 ];
 const cross = ([x, y]) => `<div class="xh" style="left:${x}mm;top:${y}mm"></div>`;
-const ruler = ([x, y]) => {
-  const bx = PAGE_W - x; // the back is mirrored left-to-right
+// The back carries the same shift as the card backs, so a reprint of this
+// test reads only the error left over after the correction.
+const ruler = ([x, y0]) => {
+  const bx = PAGE_W - x + BACK_DX; // the back is mirrored left-to-right
+  const y = y0 + BACK_DY;
   const line = (l, t, w, h) => `<div class="tk" style="left:${l}mm;top:${t}mm;width:${w}mm;height:${h}mm"></div>`;
   // Horizontal scale sits below the point and is read by the crosshair's
   // vertical arm; vertical scale sits to the right and is read by its
@@ -178,7 +183,7 @@ body { font-family: 'FreeSans', sans-serif; }
 </section>
 <section class="page">${POINTS.map(ruler).join('')}
   <div class="txt" style="top:72mm"><b>Alignment test: BACK.</b> Hold the sheet up to a light with this side facing you. Each crosshair from the front shows through onto a ruler.</div>
-  <div class="txt" style="top:86mm;font-size:9pt">Read the centre target. The small dot is where the crosshair should cross. Where the crosshair's vertical line crosses the <b>left / right</b> scale gives the first number; where its horizontal line crosses the <b>up / down</b> scale gives the second. Ticks are 1 mm apart. If both read 0, the cards will line up as they are. Otherwise, rebuild with those two numbers. If the corner rulers read differently from each other, the printer is skewing the paper and an offset cannot fully fix it.</div>
+  <div class="txt" style="top:86mm;font-size:9pt">Read the centre target. The small dot is where the crosshair should cross. Where the crosshair's vertical line crosses the <b>left / right</b> scale gives the first number; where its horizontal line crosses the <b>up / down</b> scale gives the second. Ticks are 1 mm apart. If both read 0, the cards will line up as they are. Otherwise, rebuild with those two numbers.${BACK_DX || BACK_DY ? ` <b>This copy already shifts the back by ${fmtOff(BACK_DX)} left/right and ${fmtOff(BACK_DY)} up/down, so any reading now is what is left over: add it to those numbers.</b>` : ''} If the corner rulers read differently from each other, the printer is skewing the paper and an offset cannot fully fix it.</div>
 </section></body></html>`;
 const testPath = join(OUT_DIR, 'thai-flashcards-alignment-test.html');
 writeFileSync(testPath, testHTML);
